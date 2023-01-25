@@ -1,27 +1,37 @@
-AddEventHandler('chatMessage', function(source, name, msg)
-    sm = stringsplit(msg, " ");
-    if sm[1] == "/blips" then
-        CancelEvent()
-        TriggerClientEvent('mostraBlips', source)
-    end
-end)
+function permCheck(id)
+    local id1 = tostring(id)
+    local id2 = tonumber(id)
 
-AddEventHandler('chatMessage', function(source, name, msg)
-    sm = stringsplit(msg, " ");
-    if sm[1] == "/names" then
-        CancelEvent()
-        TriggerClientEvent('mostraNomi', source)
+    if (id2 == 0) or (id2 == -1) then
+        print("Console cannot run this command.")
+        return false
     end
-end)
 
-function stringsplit(inputstr, sep)
-    if sep == nil then
-        sep = "%s"
+    if config.permtype == 0 then
+        if IsPlayerAceAllowed(id, config.aceperm) then
+            return true
+        end
     end
-    local t={} ; i=1
-    for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
-        t[i] = str
-        i = i + 1
+
+    if config.permtype == 1 then
+        local unit = exports['knight-duty']:GetUnitInfo(id)
+        if unit and (string.upper(unit.dept) == string.upper(config.department)) then
+            return true
+        end
     end
-    return t
+    return false
 end
+
+
+RegisterCommand('toggleblips', function(source,args,raw)
+    if permCheck(source) then
+        TriggerClientEvent('displayBlips', source)
+    end
+end)
+
+
+RegisterCommand('togglenames', function(source,args,raw)
+    if permCheck(source) then
+        TriggerClientEvent('displayNames', source)
+    end
+end)
