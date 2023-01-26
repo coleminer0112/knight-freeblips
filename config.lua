@@ -1,5 +1,9 @@
 config = {}
 
+
+-- Time in milliseconds between blip updates
+config.bliprefreshtime = 50
+
 --[[
     Perm config
     0 - Default ACE perms. Person needs the configured ACE permission to use the commands.
